@@ -1,0 +1,47 @@
+{
+  "name": "@mntm/graphql",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "jsnext:main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "Anton Petrov",
+    "email": "im@petrov.engineer",
+    "url": "https://petrov.engineer"
+  },
+  "description": "Simple GraphQL client",
+  "license": "MIT",
+  "keywords": [
+    "graphql-client",
+    "graphql",
+    "graphql-clients",
+    "fetch"
+  ],
+  "homepage": "https://github.com/maxi-team/graphql",
+  "bugs": "https://github.com/maxi-team/graphql/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxi-team/graphql.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@mntm/shared": "^1.1.0"
+  },
+  "devDependencies": {
+    "@mntm/eslint-config": "^0.2.0",
+    "@types/react": "^17.0.3",
+    "eslint": "^7.21.0",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "react": "^17.0.1"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}
