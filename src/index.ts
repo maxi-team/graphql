@@ -14,5 +14,6 @@ export {
 
 export {
   useQuery,
-  useLazyQuery
+  useLazyQuery,
+  useRequest
 } from './react';

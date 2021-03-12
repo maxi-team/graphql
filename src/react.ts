@@ -5,12 +5,14 @@ import type {
 
 import {
   useEffect,
-  useState
+  useState,
+  useRef
 } from 'react';
 
 import {
   useHandler,
-  constDeps
+  constDeps,
+  useUnmount
 } from '@mntm/shared';
 
 import {
@@ -29,45 +31,44 @@ const STATE_LOADING = {
   errors: null
 };
 
-export const useLazyQuery = <T>(query: string) => {
-  const [state, setState] = useState<GraphQLState<T>>(STATE_DEFAULT);
-  const run = useHandler((variables: GraphQLVariables) => {
+export const useRequest = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, defaultState: GraphQLState<T>) => {
+  const [state, setState] = useState<GraphQLState<T>>(defaultState);
+  const mounted = useRef(true);
+  useUnmount(() => {
+    mounted.current = false;
+  });
+  const run = useHandler((variables: V = {} as V) => {
     setState(STATE_LOADING);
     gqlRequest<T>(query, variables).then((data) => {
-      setState({
+      return {
         fetching: false,
         data,
         errors: null
-      });
+      };
     }).catch((errors) => {
-      setState({
+      return {
         fetching: false,
         data: null,
         errors
-      });
+      };
+    }).then((state) => {
+      if (mounted.current) {
+        setState(state);
+      }
     });
   });
   return [state, run] as const;
 };
 
-export const useQuery = <T>(query: string, variables: GraphQLVariables) => {
-  const [state, setState] = useState<GraphQLState<T>>(STATE_LOADING);
-  const run = useHandler(() => {
-    setState(STATE_LOADING);
-    gqlRequest<T>(query, variables).then((data) => {
-      setState({
-        fetching: false,
-        data,
-        errors: null
-      });
-    }).catch((errors) => {
-      setState({
-        fetching: false,
-        data: null,
-        errors
-      });
-    });
+export const useLazyQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string) => {
+  return useRequest<T, V>(query, STATE_DEFAULT);
+};
+
+export const useQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, variables: V = {} as V) => {
+  const [state, run] = useRequest<T, V>(query, STATE_LOADING);
+  const rerun = useHandler(() => {
+    run(variables);
   });
-  useEffect(run, constDeps);
-  return [state, run] as const;
+  useEffect(rerun, constDeps);
+  return [state, rerun] as const;
 };
