@@ -1,24 +1,39 @@
-import { useEffect, useState } from 'react';
-import { useHandler, constDeps } from '@mntm/shared';
+import type {
+  GraphQLVariables,
+  GraphQLState
+} from './types';
 
-import { gqlRequest } from './request';
-import type { GraphQLVariables, GraphQLState } from './types';
+import {
+  useEffect,
+  useState
+} from 'react';
 
-const DEFAULT_STATE = {
+import {
+  useHandler,
+  constDeps
+} from '@mntm/shared';
+
+import {
+  gqlRequest
+} from './request';
+
+const STATE_DEFAULT = {
+  fetching: false,
+  data: null,
+  errors: null
+};
+
+const STATE_LOADING = {
   fetching: false,
   data: null,
   errors: null
 };
 
 export const useLazyQuery = <T>(query: string) => {
-  const [state, setState] = useState<GraphQLState<T>>(DEFAULT_STATE);
-  const mutate = useHandler((variables: GraphQLVariables) => {
-    setState({
-      fetching: true,
-      data: null,
-      errors: null
-    });
-    gqlRequest<T>('', query, variables).then((data) => {
+  const [state, setState] = useState<GraphQLState<T>>(STATE_DEFAULT);
+  const run = useHandler((variables: GraphQLVariables) => {
+    setState(STATE_LOADING);
+    gqlRequest<T>(query, variables).then((data) => {
       setState({
         fetching: false,
         data,
@@ -32,13 +47,27 @@ export const useLazyQuery = <T>(query: string) => {
       });
     });
   });
-  return [state, mutate] as const;
+  return [state, run] as const;
 };
 
 export const useQuery = <T>(query: string, variables: GraphQLVariables) => {
-  const [state, mutate] = useLazyQuery<T>(query);
-  useEffect(() => {
-    mutate(variables);
-  }, constDeps);
-  return state;
+  const [state, setState] = useState<GraphQLState<T>>(STATE_LOADING);
+  const run = useHandler(() => {
+    setState(STATE_LOADING);
+    gqlRequest<T>(query, variables).then((data) => {
+      setState({
+        fetching: false,
+        data,
+        errors: null
+      });
+    }).catch((errors) => {
+      setState({
+        fetching: false,
+        data: null,
+        errors
+      });
+    });
+  });
+  useEffect(run, constDeps);
+  return [state, run] as const;
 };

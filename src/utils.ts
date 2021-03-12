@@ -3,6 +3,7 @@ import type {
 } from './types';
 
 export const ERROR_UNEXPECTED = 'Unexpected error';
+
 export const CATEGORY_NETWORK = 'network';
 export const CATEGORY_INTERNAL = 'internal';
 export const CATEGORY_CUSTOM = 'custom';

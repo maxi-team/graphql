@@ -22,3 +22,8 @@ export declare type GraphQLState<T> = {
   data: T | null;
   errors: GraphQLError[] | null;
 };
+
+export declare type GraphQLRequest = {
+  url: string;
+  headers: Record<string, string>;
+};

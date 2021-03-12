@@ -1,4 +1,5 @@
 import type {
+  GraphQLRequest,
   GraphQLResponse,
   GraphQLVariables
 } from './types';
@@ -10,13 +11,19 @@ import {
   CATEGORY_NETWORK
 } from './utils';
 
-export const gqlRequest = async <T>(url: string, query: string, variables: GraphQLVariables = {}): Promise<T> => {
-  return fetch(url, {
+export const options: GraphQLRequest = {
+  url: '/graphql',
+  headers: {}
+};
+
+export const gqlRequest = async <T>(query: string, variables: GraphQLVariables = {}): Promise<T> => {
+  return fetch(options.url, {
     cache: 'no-cache',
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...options.headers
     },
     body: JSON.stringify({
       operationName: null,
