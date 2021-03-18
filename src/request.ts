@@ -18,7 +18,7 @@ export const options: GraphQLRequest = {
 
 export const gqlRequest = async <T = any>(query: string, variables: GraphQLVariables = {}): Promise<T> => {
   return fetch(options.url, {
-    cache: 'no-cache',
+    cache: 'no-store',
     method: 'POST',
     headers: {
       Accept: 'application/json',

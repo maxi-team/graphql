@@ -4,14 +4,13 @@ import type {
 } from './types';
 
 import {
-  useEffect,
   useState,
   useRef
 } from 'react';
 
 import {
   useHandler,
-  constDeps,
+  useMount,
   useUnmount
 } from '@mntm/shared';
 
@@ -26,7 +25,7 @@ const STATE_DEFAULT = {
 };
 
 const STATE_LOADING = {
-  fetching: false,
+  fetching: true,
   data: null,
   errors: null
 };
@@ -69,6 +68,6 @@ export const useQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>
   const rerun = useHandler(() => {
     run(variables);
   });
-  useEffect(rerun, constDeps);
+  useMount(rerun);
   return [state, rerun] as const;
 };
