@@ -1,10 +1,11 @@
 {
   "name": "@mntm/graphql",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "jsnext:main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
