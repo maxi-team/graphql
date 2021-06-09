@@ -1,6 +1,6 @@
 import type {
   GraphQLError
-} from './types';
+} from './types.js';
 
 export const ERROR_UNEXPECTED = 'Unexpected error';
 

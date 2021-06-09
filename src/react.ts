@@ -1,7 +1,7 @@
 import type {
   GraphQLVariables,
   GraphQLState
-} from './types';
+} from './types.js';
 
 import {
   useState,
@@ -16,7 +16,7 @@ import {
 
 import {
   gqlRequest
-} from './request';
+} from './request.js';
 
 const STATE_DEFAULT = {
   fetching: false,

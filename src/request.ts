@@ -2,14 +2,14 @@ import type {
   GraphQLRequest,
   GraphQLResponse,
   GraphQLVariables
-} from './types';
+} from './types.js';
 
 import {
   gqlErrors,
   ERROR_UNEXPECTED,
   CATEGORY_INTERNAL,
   CATEGORY_NETWORK
-} from './utils';
+} from './utils.js';
 
 export const options: GraphQLRequest = {
   url: '/graphql',

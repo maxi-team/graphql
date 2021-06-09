@@ -1,6 +1,6 @@
 type GraphQLPrimitive = string | number | boolean | null;
 interface GraphQLEntity { [field: string]: GraphQLPrimitive | GraphQLArray | GraphQLEntity }
-interface GraphQLArray extends Array<GraphQLPrimitive | GraphQLArray | GraphQLEntity> {}
+type GraphQLArray = Array<GraphQLPrimitive | GraphQLArray | GraphQLEntity>;
 export declare type GraphQLVariables = Record<string, GraphQLPrimitive | GraphQLEntity | GraphQLArray>;
 
 export declare type GraphQLErrorLocation = {

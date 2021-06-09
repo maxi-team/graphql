@@ -1,9 +1,8 @@
 {
   "name": "@mntm/graphql",
-  "version": "2.1.2",
+  "version": "3.0.0",
+  "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.js",
-  "jsnext:main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "author": {
@@ -26,19 +25,21 @@
     "url": "https://github.com/maxi-team/graphql.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "prebuild": "shx rm -rf dist",
+    "build": "tsc"
   },
   "dependencies": {
-    "@mntm/shared": "^1.1.0"
+    "@mntm/shared": "^2.0.0"
   },
   "devDependencies": {
     "@mntm/eslint-config": "^0.2.0",
-    "@types/react": "^17.0.3",
-    "eslint": "^7.21.0",
-    "typescript": "^4.2.3"
+    "@types/react": "^17.0.11",
+    "eslint": "^7.28.0",
+    "shx": "^0.3.3",
+    "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "react": "^17.0.1"
+    "react": "^17.0.2"
   },
   "peerDependenciesMeta": {
     "react": {
