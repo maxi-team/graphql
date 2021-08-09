@@ -4,14 +4,10 @@ import type {
 } from './types.js';
 
 import {
-  useState,
-  useRef
-} from 'react';
-
-import {
   useHandler,
   useMount,
-  useUnmount
+  useTrackState,
+  useMountedRef
 } from '@mntm/shared';
 
 import {
@@ -22,20 +18,17 @@ const STATE_DEFAULT = {
   fetching: false,
   data: null,
   errors: null
-};
+} as const;
 
 const STATE_LOADING = {
   fetching: true,
   data: null,
   errors: null
-};
+} as const;
 
 export const useRequest = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, defaultState: GraphQLState<T>) => {
-  const [state, setState] = useState<GraphQLState<T>>(defaultState);
-  const mounted = useRef(true);
-  useUnmount(() => {
-    mounted.current = false;
-  });
+  const [state, setState] = useTrackState<GraphQLState<T>>(defaultState);
+  const mounted = useMountedRef();
   const run = useHandler((variables: V = {} as V) => {
     setState(STATE_LOADING);
     gqlRequest<T>(query, variables).then((data) => {

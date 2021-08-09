@@ -21,7 +21,7 @@ export const gqlRequest = async <T = any>(query: string, variables: GraphQLVaria
     cache: 'no-store',
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
       ...options.headers
     },
