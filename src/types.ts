@@ -1,5 +1,8 @@
 type GraphQLPrimitive = string | number | boolean | null;
-interface GraphQLEntity { [field: string]: GraphQLPrimitive | GraphQLArray | GraphQLEntity }
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/consistent-indexed-object-style
+interface GraphQLEntity {
+  [field: string]: GraphQLPrimitive | GraphQLArray | GraphQLEntity;
+}
 type GraphQLArray = Array<GraphQLPrimitive | GraphQLArray | GraphQLEntity>;
 export declare type GraphQLVariables = Record<string, GraphQLPrimitive | GraphQLEntity | GraphQLArray>;
 

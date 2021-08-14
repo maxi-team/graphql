@@ -1,13 +1,13 @@
 import type {
-  GraphQLVariables,
-  GraphQLState
+  GraphQLState,
+  GraphQLVariables
 } from './types.js';
 
 import {
   useHandler,
   useMount,
-  useTrackState,
-  useMountedRef
+  useMountedRef,
+  useTrackState
 } from '@mntm/shared';
 
 import {
@@ -37,18 +37,19 @@ export const useRequest = <T = any, V extends GraphQLVariables = GraphQLVariable
         data,
         errors: null
       };
-    }).catch((errors) => {
+    }).catch((ex) => {
       return {
         fetching: false,
         data: null,
-        errors
+        errors: ex
       };
-    }).then((state) => {
+    }).then((next) => {
       if (mounted.current) {
-        setState(state);
+        setState(next);
       }
     });
   });
+
   return [state, run] as const;
 };
 
@@ -61,6 +62,8 @@ export const useQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>
   const rerun = useHandler(() => {
     run(variables);
   });
+
   useMount(rerun);
+
   return [state, rerun] as const;
 };

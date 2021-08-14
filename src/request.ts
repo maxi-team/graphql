@@ -5,10 +5,10 @@ import type {
 } from './types.js';
 
 import {
-  gqlErrors,
-  ERROR_UNEXPECTED,
   CATEGORY_INTERNAL,
-  CATEGORY_NETWORK
+  CATEGORY_NETWORK,
+  ERROR_UNEXPECTED,
+  gqlErrors
 } from './utils.js';
 
 export const options: GraphQLRequest = {
@@ -34,14 +34,15 @@ export const gqlRequest = async <T = any>(query: string, variables: GraphQLVaria
     if (!response.ok) {
       throw new Error(ERROR_UNEXPECTED);
     }
+
     return response.json();
-  }).catch((e) => {
-    if (e instanceof Error) {
-      throw gqlErrors(e.message, CATEGORY_NETWORK);
+  }).catch((ex) => {
+    if (ex instanceof Error) {
+      throw gqlErrors(ex.message, CATEGORY_NETWORK);
     }
     throw gqlErrors(ERROR_UNEXPECTED, CATEGORY_NETWORK);
   }).then((response: GraphQLResponse<T>) => {
-    if (response.errors && response.errors.length) {
+    if (response.errors && response.errors.length > 0) {
       throw response.errors;
     }
     if (response.data) {

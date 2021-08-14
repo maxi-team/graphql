@@ -3,5 +3,8 @@
   "parserOptions": {
     "project": "./tsconfig.json",
     "tsconfigRootDir": "."
+  },
+  "rules": {
+    "@typescript-eslint/no-throw-literal": 0
   }
 }
