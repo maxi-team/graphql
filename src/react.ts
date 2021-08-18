@@ -4,10 +4,13 @@ import type {
 } from './types.js';
 
 import {
+  useState
+} from 'react';
+
+import {
   useHandler,
   useMount,
-  useMountedRef,
-  useTrackState
+  useMountedRef
 } from '@mntm/shared';
 
 import {
@@ -27,7 +30,7 @@ const STATE_LOADING = {
 } as const;
 
 export const useRequest = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, defaultState: GraphQLState<T>) => {
-  const [state, setState] = useTrackState<GraphQLState<T>>(defaultState);
+  const [state, setState] = useState<GraphQLState<T>>(defaultState);
   const mounted = useMountedRef();
   const run = useHandler((variables: V = {} as V) => {
     setState(STATE_LOADING);
