@@ -22,13 +22,13 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "lib"
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "dist",
+    "lib",
     "node_modules"
   ]
 }

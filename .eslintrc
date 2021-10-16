@@ -5,6 +5,9 @@
     "tsconfigRootDir": "."
   },
   "rules": {
-    "@typescript-eslint/no-throw-literal": 0
+    "spaced-comment": "off",
+    "no-inline-comments": "off",
+    "@typescript-eslint/no-throw-literal": "off",
+    "@typescript-eslint/promise-function-async": "off"
   }
 }

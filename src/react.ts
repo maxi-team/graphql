@@ -1,72 +1,76 @@
 import type {
+  GraphQLError,
+  GraphQLStableState,
   GraphQLState,
   GraphQLVariables
 } from './types.js';
 
 import {
+  useCallback,
   useState
 } from 'react';
 
 import {
-  useHandler,
-  useMount,
-  useMountedRef
+  useFirstRender,
+  useHandler
 } from '@mntm/shared';
 
 import {
   gqlRequest
 } from './request.js';
 
-const STATE_DEFAULT = {
+export const STATE_DEFAULT = {
   fetching: false,
   data: null,
   errors: null
 } as const;
 
-const STATE_LOADING = {
+export const STATE_LOADING = {
   fetching: true,
   data: null,
   errors: null
 } as const;
 
-export const useRequest = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, defaultState: GraphQLState<T>) => {
-  const [state, setState] = useState<GraphQLState<T>>(defaultState);
-  const mounted = useMountedRef();
-  const run = useHandler((variables: V = {} as V) => {
-    setState(STATE_LOADING);
+export const useRequest = <T = unknown, V extends GraphQLVariables = GraphQLVariables>(query: string, update: (state: GraphQLStableState<T>) => void) => {
+  return useHandler((variables: V = {} as V) => {
+    update(STATE_LOADING);
     gqlRequest<T>(query, variables).then((data) => {
       return {
         fetching: false,
         data,
         errors: null
-      };
-    }).catch((ex) => {
+      } as const;
+    }, (ex: GraphQLError[]) => {
       return {
         fetching: false,
         data: null,
         errors: ex
-      };
-    }).then((next) => {
-      if (mounted.current) {
-        setState(next);
-      }
-    });
+      } as const;
+    }).then(update);
   });
+};
+
+export const useLazyQuery = <T = unknown, V extends GraphQLVariables = GraphQLVariables>(query: string) => {
+  const [state, setState] = useState<GraphQLState<T>>(STATE_DEFAULT);
+
+  const run = useRequest<T, V>(query, setState);
 
   return [state, run] as const;
 };
 
-export const useLazyQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string) => {
-  return useRequest<T, V>(query, STATE_DEFAULT);
-};
+export const useQuery = <T = unknown, V extends GraphQLVariables = GraphQLVariables>(query: string, variables: V = {} as V) => {
+  const [state, setState] = useState<GraphQLStableState<T>>(STATE_LOADING);
 
-export const useQuery = <T = any, V extends GraphQLVariables = GraphQLVariables>(query: string, variables: V = {} as V) => {
-  const [state, run] = useRequest<T, V>(query, STATE_LOADING);
-  const rerun = useHandler(() => {
+  const run = useRequest<T, V>(query, setState);
+  const rerun = useCallback(() => {
     run(variables);
-  });
+  }, [variables]);
 
-  useMount(rerun);
+  const firstRender = useFirstRender();
+
+  if (firstRender) {
+    run(variables);
+  }
 
   return [state, rerun] as const;
 };
