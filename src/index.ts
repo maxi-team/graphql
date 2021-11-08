@@ -1,8 +1,14 @@
 export {
-  options,
+  options
+} from './options.js';
 
+export {
   gqlRequest
 } from './request.js';
+
+export {
+  gqlSubscribe
+} from './subscribe.js';
 
 export {
   STATE_DEFAULT,
@@ -10,7 +16,8 @@ export {
 
   useQuery,
   useLazyQuery,
-  useRequest
+  useRequest,
+  useSubscribe
 } from './react.js';
 
 export {
@@ -30,5 +37,7 @@ export type {
   GraphQLResponse,
   GraphQLState,
   GraphQLStableState,
-  GraphQLVariables
+  GraphQLVariables,
+  GraphQLErrorHandler,
+  GraphQLNextHandler
 } from './types.js';

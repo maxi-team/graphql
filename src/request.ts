@@ -1,5 +1,4 @@
 import type {
-  GraphQLRequest,
   GraphQLResponse,
   GraphQLVariables
 } from './types.js';
@@ -11,13 +10,7 @@ import {
   gqlErrors
 } from './utils.js';
 
-export const options: GraphQLRequest = {
-  url: '/graphql',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
-};
+import { options } from './options.js';
 
 export const gqlRequest = <T = unknown>(query: string, variables: GraphQLVariables = {}): Promise<T> => {
   return fetch(options.url, {

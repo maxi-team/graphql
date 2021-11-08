@@ -11,13 +11,19 @@ import {
 } from 'react';
 
 import {
-  useFirstRender,
-  useHandler
+  useCreation,
+  useHandler,
+  useRenderEffect,
+  useUnmount
 } from '@mntm/shared';
 
 import {
   gqlRequest
 } from './request.js';
+
+import {
+  gqlSubscribe
+} from './subscribe.js';
 
 export const STATE_DEFAULT = {
   fetching: false,
@@ -62,15 +68,41 @@ export const useQuery = <T = unknown, V extends GraphQLVariables = GraphQLVariab
   const [state, setState] = useState<GraphQLStableState<T>>(STATE_LOADING);
 
   const run = useRequest<T, V>(query, setState);
-  const rerun = useCallback(() => {
-    run(variables);
-  }, [variables]);
 
-  const firstRender = useFirstRender();
+  const exec = () => run(variables);
+  const rerun = useCallback(exec, [variables]);
 
-  if (firstRender) {
-    run(variables);
-  }
+  useRenderEffect(exec);
 
   return [state, rerun] as const;
+};
+
+export const useSubscribe = <T = unknown, V extends GraphQLVariables = GraphQLVariables>(query: string, variables: V = {} as V) => {
+  const [state, setState] = useState<GraphQLState<T>>(STATE_LOADING);
+
+  const stop = useCreation(() => {
+    return gqlSubscribe<T>(query, variables, (data) => {
+      setState({
+        fetching: true,
+        data,
+        errors: null
+      });
+    }, (errors) => {
+      setState({
+        fetching: true,
+        data: null,
+        errors
+      });
+    }, () => {
+      setState({
+        fetching: false,
+        data: null,
+        errors: null
+      });
+    });
+  });
+
+  useUnmount(stop);
+
+  return [state, stop];
 };

@@ -47,3 +47,6 @@ export type GraphQLRequest = {
   url: string;
   headers: Record<string, string>;
 };
+
+export type GraphQLNextHandler<T> = (payload: T) => void;
+export type GraphQLErrorHandler = (errors: GraphQLError[]) => void;
