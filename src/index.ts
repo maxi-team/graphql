@@ -7,17 +7,12 @@ export {
 } from './request.js';
 
 export {
-  gqlSubscribe
-} from './subscribe.js';
-
-export {
   STATE_DEFAULT,
   STATE_LOADING,
 
   useQuery,
   useLazyQuery,
-  useRequest,
-  useSubscribe
+  useRequest
 } from './react.js';
 
 export {

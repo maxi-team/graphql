@@ -11,19 +11,13 @@ import {
 } from 'react';
 
 import {
-  useCreation,
   useHandler,
-  useRenderEffect,
-  useUnmount
+  useRenderEffect
 } from '@mntm/shared';
 
 import {
   gqlRequest
 } from './request.js';
-
-import {
-  gqlSubscribe
-} from './subscribe.js';
 
 export const STATE_DEFAULT = {
   fetching: false,
@@ -75,34 +69,4 @@ export const useQuery = <T = unknown, V extends GraphQLVariables = GraphQLVariab
   useRenderEffect(exec);
 
   return [state, rerun] as const;
-};
-
-export const useSubscribe = <T = unknown, V extends GraphQLVariables = GraphQLVariables>(query: string, variables: V = {} as V) => {
-  const [state, setState] = useState<GraphQLState<T>>(STATE_LOADING);
-
-  const stop = useCreation(() => {
-    return gqlSubscribe<T>(query, variables, (data) => {
-      setState({
-        fetching: true,
-        data,
-        errors: null
-      });
-    }, (errors) => {
-      setState({
-        fetching: true,
-        data: null,
-        errors
-      });
-    }, () => {
-      setState({
-        fetching: false,
-        data: null,
-        errors: null
-      });
-    });
-  });
-
-  useUnmount(stop);
-
-  return [state, stop];
 };
